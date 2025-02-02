@@ -10,12 +10,10 @@ import javax.swing.JPanel;
 
 public class PanelDeJuego extends JPanel{
 
-    //implentacion arbol (se puede modificar)
-    int numeroIdentificacion;
+    public int numeroIdentificacion;
     PanelDeJuego izquierda, derecha;
 
-    //hasta aqui
-    volatile String eleccionPuerta;
+    public volatile String eleccionPuerta ="";
 
 
     //Ajustes de ventana
@@ -27,14 +25,9 @@ public class PanelDeJuego extends JPanel{
     public final int anchoPantalla = tamañoCuadro * tamañoColumnasPantalla;
     public final int alturaPantalla = tamañoCuadro * tamañoFilasPantalla;
 
-    int FPS = 60;
-
     //intanciar otras clases
-
-    //listo
-    BaldosaManager baldosaM;
-    //dejar quieto
-    ManipuladorTeclas teclas = new ManipuladorTeclas();
+    public BaldosaManager baldosaM;
+    public ManipuladorTeclas teclas = new ManipuladorTeclas();
     public VerificadorColision vColision = new VerificadorColision(this);
     public ColocadorObjetos cObjetos;
     public Jugador jugador = new Jugador(this, teclas);
@@ -44,85 +37,69 @@ public class PanelDeJuego extends JPanel{
     public int posY[];
 
 
-
-
-    //Contructor
-    public PanelDeJuego(){
-        this.setPreferredSize(new Dimension(anchoPantalla, alturaPantalla));
-        this.setBackground(Color.BLACK);
-        this.setDoubleBuffered(true);
-        this.addKeyListener(teclas);
-        this.setFocusable(true);
-    }
-    //segundo constructor
+    //constructor
     public PanelDeJuego(String mapa, int numeroEnemigos, int posX[], int posY[]){
-        this.setPreferredSize(new Dimension(anchoPantalla, alturaPantalla));
-        this.setBackground(Color.BLACK);
-        this.setDoubleBuffered(true);
-        this.addKeyListener(teclas);
-        this.setFocusable(true);
-
+        configurarPanel();
         this.numeroIdentificacion = new Random().nextInt(100);
-
-
         this.posX = posX;
         this.posY = posY;
-
-
         baldosaM = new BaldosaManager(this, mapa);
         cObjetos = new ColocadorObjetos(this);
-
         cObjetos.setObjeto();
         cObjetos.setNPC(numeroEnemigos, posX, posY);
 
-
-
+    }
+    public void configurarPanel(){
+        this.setPreferredSize(new Dimension(anchoPantalla, alturaPantalla));
+        this.setBackground(Color.BLACK);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(teclas);
+        this.setFocusable(true);
     }
 
+    public void setNumeroIdentificacion(int id){
+        this.numeroIdentificacion = id;
+    }
+    public int getNumeroIdentificacion() {
+        return numeroIdentificacion;
+    }
 
-
-
-
-    public void terminarNivel(){
-        if(obj[1] == null){
-             eleccionPuerta = "izquierda";
-        }
-        else if(obj[2] == null){
+    public void terminarNivel() {
+        if (obj[1] == null) {
+            eleccionPuerta = "izquierda";
+        } else if (obj[2] == null) {
             eleccionPuerta = "derecha";
         }
-
     }
 
 
 
-    public void actualizar(){
+    public void actualizar() {
         jugador.actualizar();
-        for(int i =0; i<npc.length; i++){
-            if(npc[i] != null){
-                npc[i].actualizar();
+        for (Entidad e : npc) {
+            if (e != null) {
+                e.actualizar();
             }
         }
     }
 
-    public void paintComponent(Graphics g){
+    @Override
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D)g;
-        baldosaM.dibujar(g2);
-
-        //dibujar objetos
-        for(int i =0; i < obj.length; i++ ){
-            if(obj[i]!= null){
-                obj[i].dibujar(g2, this);
+        Graphics2D g2 = (Graphics2D) g;
+        if (baldosaM != null) {
+            baldosaM.dibujar(g2);
+        }
+        for (SuperObjeto objeto : obj) {
+            if (objeto != null) {
+                objeto.dibujar(g2, this);
             }
         }
-
-        //dibujar NPCs
-        for(int i =0; i < npc.length; i++){
-            if(npc[i] != null){
-                npc[i].dibujar(g2);
+        for (Entidad e : npc) {
+            if (e != null) {
+                e.dibujar(g2);
             }
         }
-        // dibujar jugador
         jugador.dibujar(g2);
         g2.dispose();
     }
