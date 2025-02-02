@@ -5,9 +5,18 @@ import baldosa.Baldosa;
 import baldosa.BaldosaManager;
 import objetos.SuperObjeto;
 import java.awt.*;
+import java.util.Random;
 import javax.swing.JPanel;
 
-public class PanelDeJuego extends JPanel  implements Runnable{
+public class PanelDeJuego extends JPanel{
+
+    //implentacion arbol (se puede modificar)
+    int numeroIdentificacion;
+    PanelDeJuego izquierda, derecha;
+
+    //hasta aqui
+    volatile String eleccionPuerta;
+
 
     //Ajustes de ventana
     final int tamañoOriginalCuadro = 16;
@@ -20,21 +29,24 @@ public class PanelDeJuego extends JPanel  implements Runnable{
 
     int FPS = 60;
 
-    BaldosaManager baldosaM = new BaldosaManager(this);
+    //intanciar otras clases
+
+    //listo
+    BaldosaManager baldosaM;
+    //dejar quieto
     ManipuladorTeclas teclas = new ManipuladorTeclas();
-    Thread hiloJuego;
     public VerificadorColision vColision = new VerificadorColision(this);
-    public ColocadorObjetos cObjetos = new ColocadorObjetos(this);
-
+    public ColocadorObjetos cObjetos;
     public Jugador jugador = new Jugador(this, teclas);
-    public SuperObjeto obj[] = new SuperObjeto[10];
+    public SuperObjeto obj[] = new SuperObjeto[3];
     public Entidad npc[] = new Entidad[10];
+    public int posX[];
+    public int posY[];
 
-    //posiciones por defecto de jugador
-    int jugadorX = 100;
-    int jugadorY = 100;
-    int jugadorVelocidad = 4;
 
+
+
+    //Contructor
     public PanelDeJuego(){
         this.setPreferredSize(new Dimension(anchoPantalla, alturaPantalla));
         this.setBackground(Color.BLACK);
@@ -42,71 +54,75 @@ public class PanelDeJuego extends JPanel  implements Runnable{
         this.addKeyListener(teclas);
         this.setFocusable(true);
     }
+    //segundo constructor
+    public PanelDeJuego(String mapa, int numeroEnemigos, int posX[], int posY[]){
+        this.setPreferredSize(new Dimension(anchoPantalla, alturaPantalla));
+        this.setBackground(Color.BLACK);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(teclas);
+        this.setFocusable(true);
 
-    public void setupJuego(){
+        this.numeroIdentificacion = new Random().nextInt(100);
+
+
+        this.posX = posX;
+        this.posY = posY;
+
+
+        baldosaM = new BaldosaManager(this, mapa);
+        cObjetos = new ColocadorObjetos(this);
+
         cObjetos.setObjeto();
-        cObjetos.setNPC();
+        cObjetos.setNPC(numeroEnemigos, posX, posY);
+
+
+
     }
 
-    public void iniciarHiloJuego(){
-        hiloJuego = new Thread(this);
-        hiloJuego.start();
-    }
 
-    //Game loop -buble de juego
-    @Override
-    public void run() {
 
-        double intervaloDibujo = 1000000000/FPS;
-        double delta = 0;
-        long ultimoTiempo = System.nanoTime();
-        long tiempoActual;
 
-        while(hiloJuego != null){
 
-            tiempoActual = System.nanoTime();
-            delta +=(tiempoActual - ultimoTiempo)/intervaloDibujo;
-            ultimoTiempo = tiempoActual;
-            
-            if(delta >=1){
-                actualizar();
-                repaint();
-                delta--;
-            }
+    public void terminarNivel(){
+        if(obj[1] == null){
+             eleccionPuerta = "izquierda";
         }
+        else if(obj[2] == null){
+            eleccionPuerta = "derecha";
+        }
+
     }
+
+
 
     public void actualizar(){
         jugador.actualizar();
-
         for(int i =0; i<npc.length; i++){
             if(npc[i] != null){
                 npc[i].actualizar();
             }
         }
-
-
     }
+
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         baldosaM.dibujar(g2);
 
+        //dibujar objetos
         for(int i =0; i < obj.length; i++ ){
             if(obj[i]!= null){
                 obj[i].dibujar(g2, this);
             }
         }
 
-        //NPC
+        //dibujar NPCs
         for(int i =0; i < npc.length; i++){
             if(npc[i] != null){
                 npc[i].dibujar(g2);
             }
         }
-
-
-        // juegador
+        // dibujar jugador
         jugador.dibujar(g2);
         g2.dispose();
     }

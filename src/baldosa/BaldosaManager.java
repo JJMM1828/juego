@@ -13,13 +13,13 @@ public class BaldosaManager {
     public Baldosa[] baldosa;
     public int mapaBaldosaNumero[][];
 
-    public BaldosaManager(PanelDeJuego pj){
+    public BaldosaManager(PanelDeJuego pj, String mapa){
 
         this.pj = pj;
         baldosa = new Baldosa[10];
         mapaBaldosaNumero = new int[pj.tamañoColumnasPantalla][pj.tamañoFilasPantalla];
         getImagenBaldosa();
-        cargarMapa("/mapas/mapa01.txt");
+        cargarMapa(mapa);
     }
 
     public void getImagenBaldosa(){
@@ -30,10 +30,9 @@ public class BaldosaManager {
 
             baldosa[1] =new Baldosa();
             baldosa[1].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/wall.png"));
-
             baldosa[1].colision = true;
-            baldosa[2] =new Baldosa();
 
+            baldosa[2] =new Baldosa();
             baldosa[2].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/water.png"));
             baldosa[2].colision = true;
 
@@ -66,14 +65,12 @@ public class BaldosaManager {
                 }
             }
             br.close();
-
         }catch (Exception e){
             System.out.println(e);
         }
     }
 
     public void dibujar(Graphics2D g2){
-
         int columna =0;
         int fila = 0;
         int x =0;

@@ -21,7 +21,6 @@ public class NPC extends Entidad{
         areaSolidaDefectoY = areaSolida.y;
         areaSolida.width = 32;
         areaSolida.height = 32;
-
         getImagen();
     }
 
@@ -48,20 +47,11 @@ public class NPC extends Entidad{
         if(bloquearAccion == 120){
             Random random = new Random();
             int i = random.nextInt(100)+1;
-            if(i <= 25){
-                direccion = "arriba";
-            }
-            if(i > 25 && i <= 50){
-                direccion = "abajo";
-            }
-            if(i > 50 && i <= 75){
-                direccion = "izquierda";
-            }
-            if(i > 75 && i <= 100){
-                direccion = "derecha";
-            }
+            if(i <= 25){direccion = "arriba";}
+            if(i > 25 && i <= 50){direccion = "abajo";}
+            if(i > 50 && i <= 75){direccion = "izquierda";}
+            if(i > 75 && i <= 100){direccion = "derecha";}
             bloquearAccion =0;
         }
-
     }
 }

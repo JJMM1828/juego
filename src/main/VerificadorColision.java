@@ -5,6 +5,7 @@ import Entidad.Entidad;
 public class VerificadorColision {
 
     PanelDeJuego pj;
+
     public VerificadorColision(PanelDeJuego pj){
         this.pj = pj;
 

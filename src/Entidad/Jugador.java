@@ -8,16 +8,12 @@ import java.io.IOException;
 
 public class Jugador extends Entidad{
 
-
     ManipuladorTeclas teclas;
     int tieneLlaves =0;
 
     public Jugador(PanelDeJuego pj, ManipuladorTeclas teclas){
-
-
         super(pj);
         this.teclas = teclas;
-
         areaSolida = new Rectangle();
         areaSolida.x = 8;
         areaSolida.y = 16;
@@ -27,16 +23,17 @@ public class Jugador extends Entidad{
         areaSolida.height = 32;
 
         setValoresDefecto();
-        getImagenJuegador();
+        getImagenJugador();
     }
 
     public void setValoresDefecto(){
-        x = 100;
-        y = 100;
-        velocidad = 4;
+        x = pj.tamañoCuadro *2;
+        y = pj.tamañoCuadro * 2;
+        velocidad = 3;
         direccion = "abajo";
     }
-    public void getImagenJuegador(){
+
+    public void getImagenJugador(){
         try{
 
             arriba1 = ImageIO.read(getClass().getResourceAsStream("/jugador/boy_up_1.png"));
@@ -56,36 +53,20 @@ public class Jugador extends Entidad{
     public void actualizar(){
 
         if(teclas.arribaPresionado || teclas.abajoPresionado || teclas.derechaPresionado || teclas.izquierdaPresionado){
-            if(teclas.arribaPresionado){
-                direccion = "arriba";
-
-            }
-            else if(teclas.abajoPresionado){
-                direccion = "abajo";
-
-            }
-            else if (teclas.derechaPresionado) {
-                direccion = "derecha";
-
-            }
-            else if (teclas.izquierdaPresionado) {
-                direccion = "izquierda";
-
-            }
+            if(teclas.arribaPresionado){ direccion = "arriba";}
+            else if(teclas.abajoPresionado){ direccion = "abajo";}
+            else if (teclas.derechaPresionado) { direccion = "derecha";}
+            else if (teclas.izquierdaPresionado) { direccion = "izquierda";}
 
             //colisiones
             colisionEncendida = false;
             pj.vColision.verificarBaldosa(this);
-
-
             int objIndice = pj.vColision.verificarObjeto(this, true);
             tomarObjeto(objIndice);
 
             //NPC colision
             int npcIndice = pj.vColision.verificarEntidad(this, pj.npc);
             interacturarNPC(npcIndice);
-
-
 
             if(colisionEncendida ==false){
                 switch (direccion){
@@ -134,43 +115,4 @@ public class Jugador extends Entidad{
         }
     }
 
-    public void dibujar(Graphics2D g2){
-        BufferedImage imagen = null;
-
-        switch (direccion){
-            case "arriba":
-                if(spriteNumero ==1){
-                    imagen = arriba1;
-                }
-                if(spriteNumero == 2){
-                    imagen = arriba2;
-                }
-                break;
-            case "abajo":
-                if(spriteNumero ==1){
-                    imagen = abajo1;
-                }
-                if(spriteNumero == 2){
-                    imagen = abajo2;
-                }
-                break;
-            case "derecha":
-                if(spriteNumero ==1){
-                    imagen = derecha1;
-                }
-                if(spriteNumero == 2){
-                    imagen = derecha2;
-                }
-                break;
-            case "izquierda":
-                if(spriteNumero ==1){
-                    imagen = izquierda1;
-                }
-                if(spriteNumero == 2){
-                    imagen = izquierda2;
-                }
-                break;
-        }
-        g2.drawImage(imagen, x, y, pj.tamañoCuadro, pj.tamañoCuadro, null);
-    }
 }
