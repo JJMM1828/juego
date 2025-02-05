@@ -1,15 +1,16 @@
 package main;
-import baldosa.*;
-import Entidad.*;
+
+import estructuras.ArbolDeNiveles;
+import estructuras.NodoArbol;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Juego extends JFrame implements Runnable{
+public class Juego extends JFrame implements Runnable {
 
-
-    ArbolDeNiveles arbol;
-    PanelDeJuego nivelActual;
+    public ArbolDeNiveles arbol;
+    private NodoArbol nivelActualNodo; // Nodo actual en el árbol
+    private PanelDeJuego nivelActual;  // Panel que se muestra (extraído del nodo actual)
     public Timer timer;
     public Thread hiloJuego;
     public boolean enEjecucion = false;
@@ -17,6 +18,7 @@ public class Juego extends JFrame implements Runnable{
     public Juego(){
         arbol = new ArbolDeNiveles();
 
+        // Crear instancias de PanelDeJuego (usa el constructor parametrizado para niveles completos)
         PanelDeJuego panelDeJuego0 = new PanelDeJuego("/mapas/mapa01.txt/", 0, new int[]{}, new int[]{});
         PanelDeJuego panelDeJuego1 = new PanelDeJuego("/mapas/mapa01.txt/", 5, new int[]{5,4,6,7,8}, new int[]{5,4,9,6,3});
         PanelDeJuego panelDeJuego2 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
@@ -25,7 +27,7 @@ public class Juego extends JFrame implements Runnable{
         PanelDeJuego panelDeJuego5 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
         PanelDeJuego panelDeJuego6 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
 
-
+        // Insertar niveles en el árbol
         arbol.insertar(panelDeJuego0);
         arbol.insertar(panelDeJuego1);
         arbol.insertar(panelDeJuego2);
@@ -34,8 +36,11 @@ public class Juego extends JFrame implements Runnable{
         arbol.insertar(panelDeJuego5);
         arbol.insertar(panelDeJuego6);
 
-        nivelActual = arbol.raiz;
+        // Asignamos el nodo raíz del árbol como nivel actual
+        nivelActualNodo = arbol.raiz;
+        nivelActual = nivelActualNodo.nivel;
 
+        // Configurar la ventana
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
         this.setTitle("ESCAPE");
@@ -46,17 +51,27 @@ public class Juego extends JFrame implements Runnable{
 
         iniciarHiloJuego();
 
+        // Timer para detectar la elección de puerta y cambiar de nivel
         timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(nivelActual.eleccionPuerta.isEmpty()){
-                    if(nivelActual.eleccionPuerta.equals("izquierda")){
-                        cambiarNivel(nivelActual.izquierda);
-
-                    }
-                    if(nivelActual.eleccionPuerta.equals("derecha")){
-                        cambiarNivel(nivelActual.derecha);
-
+                if (!nivelActual.eleccionPuerta.isEmpty()) {
+                    if (nivelActual.eleccionPuerta.equals("izquierda")) {
+                        if (nivelActualNodo.izquierda != null) {
+                            cambiarNivel(nivelActualNodo.izquierda);
+                        } else {
+                            System.out.println("Fin del juego (No hay nivel a la izquierda).");
+                            enEjecucion = false;
+                            timer.stop();
+                        }
+                    } else if (nivelActual.eleccionPuerta.equals("derecha")) {
+                        if (nivelActualNodo.derecha != null) {
+                            cambiarNivel(nivelActualNodo.derecha);
+                        } else {
+                            System.out.println("Fin del juego (No hay nivel a la derecha).");
+                            enEjecucion = false;
+                            timer.stop();
+                        }
                     }
                 }
             }
@@ -73,21 +88,24 @@ public class Juego extends JFrame implements Runnable{
     }
     public void detenerHiloJuego() {
         enEjecucion = false;
-
     }
-    public void cambiarNivel(PanelDeJuego siguiente) {
-        if (siguiente != null) {
-            this.remove(nivelActual);
-            nivelActual = siguiente;
-            this.add(nivelActual);
-            this.revalidate();
-            this.repaint();
-            nivelActual.eleccionPuerta = "";
-            nivelActual.requestFocusInWindow();
-        } else {
-            detenerHiloJuego();
-            this.dispose();
-        }
+
+    // Actualiza la variable de nivel actual usando el nodo del árbol
+    private void cambiarNivel(NodoArbol nuevoNodo) {
+        // Remueve el nivel actual de la ventana
+        this.remove(nivelActual);
+        // Actualiza el nodo actual
+        nivelActualNodo = nuevoNodo;
+        // Extrae el PanelDeJuego del nodo actual
+        nivelActual = nivelActualNodo.nivel;
+        // Agrega el nuevo nivel a la ventana
+        this.add(nivelActual);
+        this.revalidate();
+        this.repaint();
+        // Reinicia la elección de puerta
+        nivelActual.eleccionPuerta = "";
+        // Solicita el foco para que se capturen los eventos de teclado
+        nivelActual.requestFocusInWindow();
     }
 
     @Override
@@ -106,19 +124,31 @@ public class Juego extends JFrame implements Runnable{
             if (delta >= 1) {
                 actualizarJuego();
                 repaint();
+                // Llamamos a terminarNivel() para que el nivel establezca su elección si corresponde
                 nivelActual.terminarNivel();
                 delta--;
             }
         }
     }
-    private void actualizarJuego() {
+
+    public void actualizarJuego() {
         nivelActual.actualizar();
-        if (nivelActual.eleccionPuerta != null) {
+        // La lógica de cambio de nivel se maneja en el Timer, pero también se verifica aquí
+        if (!nivelActual.eleccionPuerta.isEmpty()) {
             if (nivelActual.eleccionPuerta.equals("izquierda")) {
-                cambiarNivel(nivelActual.izquierda);
-            }
-            if (nivelActual.eleccionPuerta.equals("derecha")) {
-                cambiarNivel(nivelActual.derecha);
+                if (nivelActualNodo.izquierda != null) {
+                    cambiarNivel(nivelActualNodo.izquierda);
+                } else {
+                    System.out.println("Fin del juego (No hay nivel a la izquierda).");
+                    enEjecucion = false;
+                }
+            } else if (nivelActual.eleccionPuerta.equals("derecha")) {
+                if (nivelActualNodo.derecha != null) {
+                    cambiarNivel(nivelActualNodo.derecha);
+                } else {
+                    System.out.println("Fin del juego (No hay nivel a la derecha).");
+                    enEjecucion = false;
+                }
             }
         }
     }

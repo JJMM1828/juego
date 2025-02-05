@@ -11,8 +11,6 @@ import javax.swing.JPanel;
 public class PanelDeJuego extends JPanel{
 
     public int numeroIdentificacion;
-    PanelDeJuego izquierda, derecha;
-
     public volatile String eleccionPuerta ="";
 
 
