@@ -13,6 +13,7 @@ public class Entidad {
     public int spriteNumero = 1;
     public Rectangle areaSolida = new Rectangle(0,0,48,48);
     public boolean colisionEncendida = false;
+
     public int areaSolidaDefectoX, areaSolidaDefectoY;
     public int  bloquearAccion =0;
 

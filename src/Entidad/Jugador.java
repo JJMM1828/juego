@@ -8,6 +8,7 @@ import java.io.IOException;
 
 public class Jugador extends Entidad{
 
+    public boolean colisionContraEnemigo = false;
     ManipuladorTeclas teclas;
     int tieneLlaves =0;
 
@@ -58,6 +59,7 @@ public class Jugador extends Entidad{
             else if (teclas.derechaPresionado) { direccion = "derecha";}
             else if (teclas.izquierdaPresionado) { direccion = "izquierda";}
 
+
             //colisiones
             colisionEncendida = false;
             pj.vColision.verificarBaldosa(this);
@@ -67,6 +69,8 @@ public class Jugador extends Entidad{
             //NPC colision
             int npcIndice = pj.vColision.verificarEntidad(this, pj.npc);
             interacturarNPC(npcIndice);
+
+
 
             if(colisionEncendida ==false){
                 switch (direccion){
@@ -111,7 +115,8 @@ public class Jugador extends Entidad{
 
     public void interacturarNPC(int i){
         if(i != 999){
-            System.out.println("golpe");
+            this.colisionContraEnemigo = true;
+            System.out.println("fin del juego (recibiste daño 2)");
         }
     }
 

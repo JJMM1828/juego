@@ -195,6 +195,7 @@ public class VerificadorColision {
                 if(entidad.areaSolida.intersects(pj.jugador.areaSolida)){
 
                     entidad.colisionEncendida = true;
+                    pj.jugador.colisionContraEnemigo = true;
 
                 }
                 break;
@@ -203,6 +204,8 @@ public class VerificadorColision {
                 if(entidad.areaSolida.intersects(pj.jugador.areaSolida)){
 
                     entidad.colisionEncendida = true;
+                    pj.jugador.colisionContraEnemigo = true;
+
                 }
                 break;
             case "izquierda":
@@ -210,6 +213,8 @@ public class VerificadorColision {
                 if(entidad.areaSolida.intersects(pj.jugador.areaSolida)){
 
                     entidad.colisionEncendida = true;
+                    pj.jugador.colisionContraEnemigo = true;
+
                 }
                 break;
             case "derecha":
@@ -217,6 +222,8 @@ public class VerificadorColision {
                 if(entidad.areaSolida.intersects(pj.jugador.areaSolida)){
 
                     entidad.colisionEncendida = true;
+                    pj.jugador.colisionContraEnemigo = true;
+
                 }
                 break;
         }
@@ -224,5 +231,6 @@ public class VerificadorColision {
         entidad.areaSolida.y = entidad.areaSolidaDefectoY;
         pj.jugador.areaSolida.x = pj.jugador.areaSolidaDefectoX;
         pj.jugador.areaSolida.y = pj.jugador.areaSolidaDefectoY;
+
     }
 }
