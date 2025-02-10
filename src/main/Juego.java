@@ -35,22 +35,33 @@ public class Juego extends JFrame implements Runnable {
         arbol = new ArbolDeNiveles();
 
         // Crear instancias de PanelDeJuego (cada nivel con su mapa, enemigos, etc.)
-        PanelDeJuego panelDeJuego0 = new PanelDeJuego("/mapas/mapa01.txt/", 0, new int[]{}, new int[]{});
-        PanelDeJuego panelDeJuego1 = new PanelDeJuego("/mapas/mapa01.txt/", 5, new int[]{5,4,6,7,8}, new int[]{5,4,9,6,3});
-        PanelDeJuego panelDeJuego2 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
-        PanelDeJuego panelDeJuego3 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
-        PanelDeJuego panelDeJuego4 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
-        PanelDeJuego panelDeJuego5 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
-        PanelDeJuego panelDeJuego6 = new PanelDeJuego("/mapas/mapa02.txt/", 9, new int[]{4,5,6,7,8,9,11,4,6}, new int[]{5,6,7,8,9,10,4,6,8});
+        PanelDeJuego panelDeJuego1 = new PanelDeJuego("/mapas/mapa01.txt/",
+                15,
+                new int[]{2,2,2,2,2,2,2,10,10,10,10,10,10,10,10},
+                new int[]{12,12,12,12,12,12,12,5,5,5,5,5,5,5,5},
+                2,12,16,8,16,5);
+
+        PanelDeJuego panelDeJuego2 = new PanelDeJuego("/mapas/mapa02.txt/",
+                18,
+                new int[]{5,5,5,5,5,5,5,5,5,11,11,11,11,11,11,11,11,11},
+                new int[]{3,3,3,3,3,3,3,3,3,11,11,11,11,11,11,11,11,11},
+                8,6,16,8,16,5);
+
+        PanelDeJuego panelDeJuego3 = new PanelDeJuego("/mapas/mapa03.txt/",
+                15,
+                new int[]{3,3,3,3,3,12,12,12,12,12,13,13,13,13,13},
+                new int[]{11,11,11,11,11,3,3,3,3,3,11,11,11,11,11},
+                2,12,16,8,16,4);
+
+        PanelDeJuego panelDeJuego4 = new PanelDeJuego("/mapas/mapa04.txt/",
+                18,
+                new int[]{3,3,10,10,10,10,7,7,14,14,14,14,14,2,6,6,6,6},
+                new int[]{11,11,6,6,6,6,10,10,4,4,4,4,4,6,2,2,2,2},
+                2,12,16,8,16,5);
 
         // Insertar cada nivel en el árbol. El árbol se reconstruye balanceado internamente.
-        arbol.insertar(panelDeJuego0);
-        arbol.insertar(panelDeJuego1);
-        arbol.insertar(panelDeJuego2);
-        arbol.insertar(panelDeJuego3);
         arbol.insertar(panelDeJuego4);
-        arbol.insertar(panelDeJuego5);
-        arbol.insertar(panelDeJuego6);
+
 
         // Asignar el nodo raíz del árbol como nivel actual
         nivelActualNodo = arbol.raiz;

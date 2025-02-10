@@ -28,8 +28,8 @@ public class Jugador extends Entidad{
     }
 
     public void setValoresDefecto(){
-        x = pj.tamañoCuadro *2;
-        y = pj.tamañoCuadro * 2;
+        x = pj.tamañoCuadro *1;
+        y = pj.tamañoCuadro * 1;
         velocidad = 3;
         direccion = "abajo";
     }

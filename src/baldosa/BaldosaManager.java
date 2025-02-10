@@ -36,6 +36,26 @@ public class BaldosaManager {
             baldosa[2].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/water.png"));
             baldosa[2].colision = true;
 
+            baldosa[3] =new Baldosa();
+            baldosa[3].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/hielo.png"));
+            baldosa[3].colision = true;
+
+            baldosa[4] =new Baldosa();
+            baldosa[4].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/lianas.png"));
+            baldosa[4].colision = true;
+
+            baldosa[5] =new Baldosa();
+            baldosa[5].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/madera.png"));
+
+            baldosa[6] =new Baldosa();
+            baldosa[6].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/pasto.png"));
+
+            baldosa[7] =new Baldosa();
+            baldosa[7].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/earth.png"));
+
+            baldosa[8] =new Baldosa();
+            baldosa[8].imagen = ImageIO.read(getClass().getResourceAsStream("/baldosas/sand.png"));
+
         }catch (IOException e){
             e.printStackTrace();
         }

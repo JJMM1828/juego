@@ -18,8 +18,8 @@ public class PanelDeJuego extends JPanel{
     final int tamañoOriginalCuadro = 16;
     final int escalar = 3;
     public final int tamañoCuadro = tamañoOriginalCuadro * escalar;
-    public final int tamañoColumnasPantalla =16;
-    public final int tamañoFilasPantalla = 12;
+    public final int tamañoColumnasPantalla =18;
+    public final int tamañoFilasPantalla = 14;
     public final int anchoPantalla = tamañoCuadro * tamañoColumnasPantalla;
     public final int alturaPantalla = tamañoCuadro * tamañoFilasPantalla;
 
@@ -30,7 +30,7 @@ public class PanelDeJuego extends JPanel{
     public ColocadorObjetos cObjetos;
     public Jugador jugador = new Jugador(this, teclas);
     public SuperObjeto obj[] = new SuperObjeto[3];
-    public Entidad npc[] = new Entidad[10];
+    public Entidad npc[] = new Entidad[20];
     public int posX[];
     public int posY[];
 
@@ -45,7 +45,23 @@ public class PanelDeJuego extends JPanel{
         cObjetos = new ColocadorObjetos(this);
         cObjetos.setObjeto();
         cObjetos.setNPC(numeroEnemigos, posX, posY);
-
+    }
+    //constructor para especificar coordenadas llave- puerta
+    public PanelDeJuego(String mapa, int numeroEnemigos, int posX[], int posY[], int XLLave, int YLlave, int XPuerta1, int YPuerta1, int XPuerta2, int YPuerta2){
+        configurarPanel();
+        this.numeroIdentificacion = new Random().nextInt(100);
+        this.posX = posX;
+        this.posY = posY;
+        baldosaM = new BaldosaManager(this, mapa);
+        cObjetos = new ColocadorObjetos(this);
+        cObjetos.setObjeto();
+        obj[0].mundoX = XLLave * tamañoCuadro;
+        obj[0].mundoY = YLlave * tamañoCuadro;
+        obj[1].mundoX = XPuerta1 * tamañoCuadro;
+        obj[1].mundoY = YPuerta1 * tamañoCuadro;
+        obj[2].mundoX = XPuerta2 * tamañoCuadro;
+        obj[2].mundoY = YPuerta2 * tamañoCuadro;
+        cObjetos.setNPC(numeroEnemigos, posX, posY);
     }
     public void configurarPanel(){
         this.setPreferredSize(new Dimension(anchoPantalla, alturaPantalla));
